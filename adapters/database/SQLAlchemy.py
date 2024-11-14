@@ -1,15 +1,21 @@
 from sqlalchemy import Column, Engine, Integer, Text, ForeignKey, create_engine
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
+from config.config import config
+import logging
 
-# TODO: Config for database path
-engine = create_engine("sqlite:///quanta.db", connect_args={"check_same_thread": False})
+logger = logging.getLogger(__name__)
 
+engine = create_engine(config.database.connection_string, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-def init_db(engine: Engine):
-    Base.metadata.create_all(bind=engine)
+Base = declarative_base()
 
 class Device(Base):
     __tablename__ = "devices"
@@ -47,3 +53,7 @@ class Message(Base):
 
     def __repr__(self):
         return f"Message(id={self.id!r}, device_id={self.device_id!r}, metric_id={self.metric_id!r}, value={self.value!r})"
+
+def init_db(engine: Engine):
+    logger.info("Initializing database")
+    Base.metadata.create_all(bind=engine)

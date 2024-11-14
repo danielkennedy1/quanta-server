@@ -1,10 +1,19 @@
 from connexion import App
 from connexion.resolver import RelativeResolver
-from config.config import Config
 import logging
 
-config = Config("config/config.json")
-config.configure_logger(logging.getLogger())
+from config.config import config
+from adapters.database.SQLAlchemy import engine, init_db, SessionLocal, Device
 
 app = App(__name__)
-app.add_api('api.yaml', resolver=RelativeResolver("adapters.controller.controller"))
+app.add_api(config.api.spec_file, resolver=RelativeResolver(config.api.resolver))
+
+config.logging.configure_logger(logging.getLogger())
+config.logging.configure_logger(logging.getLogger('uvicorn'))
+config.logging.configure_logger(logging.getLogger('uvicorn.access'))
+config.logging.configure_logger(logging.getLogger('uvicorn.warning'))
+
+init_db(engine)
+
+with SessionLocal() as session:
+    session.add(Device(description="Device 1"))

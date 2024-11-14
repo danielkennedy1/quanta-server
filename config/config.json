@@ -2,5 +2,12 @@
     "log": {
         "level": "INFO",
         "file": "app.log"
+    },
+    "api": {
+        "spec_file": "api.yaml",
+        "resolver": "adapters.controller.controller" 
+    },
+    "database": {
+        "connection_string": "sqlite:///quanta.db"
     }
 }
