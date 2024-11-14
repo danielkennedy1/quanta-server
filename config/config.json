@@ -1,4 +1,6 @@
 {
-    "log_level": "INFO",
-    "log_file": "app.log"
+    "log": {
+        "level": "INFO",
+        "file": "app.log"
+    }
 }

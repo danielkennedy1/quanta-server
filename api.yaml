@@ -12,7 +12,7 @@ paths:
     get:
       summary: List all devices
       description: Retrieve a list of all registered devices.
-      operationId: getDevices
+      operationId: device.getAll
       responses:
         '200':
           description: A list of devices
@@ -30,8 +30,9 @@ paths:
     post:
       summary: Create a new device
       description: Register a new device with a unique identifier and description.
-      operationId: createDevice
+      operationId: device.create
       requestBody:
+        description: Device object to be created
         required: true
         content:
           application/json:
@@ -55,7 +56,7 @@ paths:
     get:
       summary: Retrieve a specific device
       description: Get details for a device by its ID.
-      operationId: getDeviceById
+      operationId: device.getById
       parameters:
         - name: id
           in: path
@@ -63,6 +64,7 @@ paths:
           schema:
             type: integer
           description: The unique identifier for the device
+          example: 1
       responses:
         '200':
           description: Device details
@@ -78,7 +80,7 @@ paths:
     delete:
       summary: Delete a specific device
       description: Remove a device by its ID.
-      operationId: deleteDevice
+      operationId: device.deleteById
       parameters:
         - name: id
           in: path
@@ -86,6 +88,7 @@ paths:
           schema:
             type: integer
           description: The unique identifier for the device
+          example: 1
       responses:
         '204':
           description: Device deleted
@@ -94,7 +97,7 @@ paths:
     get:
       summary: List all metrics
       description: Retrieve a list of all metrics, each defined with a name and data type.
-      operationId: getMetrics
+      operationId: metrics.getAll
       responses:
         '200':
           description: A list of metrics
@@ -114,8 +117,9 @@ paths:
     post:
       summary: Create a new metric
       description: Register a new metric with a name and data type.
-      operationId: createMetric
+      operationId: metric.create
       requestBody:
+        description: Metric object to be created
         required: true
         content:
           application/json:
@@ -141,7 +145,7 @@ paths:
     get:
       summary: Retrieve a specific metric
       description: Get details for a metric by its ID.
-      operationId: getMetricById
+      operationId: metric.getById
       parameters:
         - name: id
           in: path
@@ -149,6 +153,7 @@ paths:
           schema:
             type: integer
           description: The unique identifier for the metric
+          example: 1
       responses:
         '200':
           description: Metric details
@@ -165,7 +170,7 @@ paths:
     delete:
       summary: Delete a specific metric
       description: Remove a metric by its ID.
-      operationId: deleteMetric
+      operationId: metric.deleteById
       parameters:
         - name: id
           in: path
@@ -173,6 +178,7 @@ paths:
           schema:
             type: integer
           description: The unique identifier for the metric
+          example: 1
       responses:
         '204':
           description: Metric deleted
@@ -181,7 +187,7 @@ paths:
     get:
       summary: List all messages
       description: Retrieve a list of all messages, each containing a device ID, metric ID, metric value, and timestamp.
-      operationId: getMessages
+      operationId: messages.getAll
       responses:
         '200':
           description: A list of messages
@@ -205,8 +211,9 @@ paths:
     post:
       summary: Create a new message
       description: Record a new message with device ID, metric ID, metric value, and timestamp.
-      operationId: createMessage
+      operationId: messages.create
       requestBody:
+        description: Message object to be created
         required: true
         content:
           application/json:
@@ -236,7 +243,7 @@ paths:
     get:
       summary: Retrieve a specific message
       description: Get details for a message by its ID.
-      operationId: getMessageById
+      operationId: message.getById
       parameters:
         - name: id
           in: path
@@ -244,6 +251,7 @@ paths:
           schema:
             type: integer
           description: The unique identifier for the message
+          example: 1
       responses:
         '200':
           description: Message details
@@ -262,7 +270,7 @@ paths:
     delete:
       summary: Delete a specific message
       description: Remove a message by its ID.
-      operationId: deleteMessage
+      operationId: message.deleteById
       parameters:
         - name: id
           in: path
@@ -270,6 +278,7 @@ paths:
           schema:
             type: integer
           description: The unique identifier for the message
+          example: 1
       responses:
         '204':
           description: Message deleted
@@ -277,6 +286,7 @@ paths:
 components:
   schemas:
     Device:
+      description: A device that can record metrics
       type: object
       properties:
         id:
@@ -290,8 +300,12 @@ components:
       required:
         - id
         - description
+      example:
+        id: 1
+        description: "Temperature Sensor in Room 101"
 
     Metric:
+      description: A metric that can be recorded by a device
       type: object
       properties:
         id:
@@ -310,8 +324,13 @@ components:
         - id
         - name
         - data_type
+      example:
+        id: 1
+        name: "Temperature"
+        data_type: "float"
 
     Message:
+      description: A message recorded by a device with a metric value
       type: object
       properties:
         id:
@@ -341,3 +360,9 @@ components:
         - metric_id
         - metric_value
         - timestamp
+      example:
+        id: 1
+        device_id: 1
+        metric_id: 1
+        metric_value: "23.5"
+        timestamp: "2023-10-01T12:30:00Z"

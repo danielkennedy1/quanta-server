@@ -7,8 +7,8 @@ class Config:
     def __init__(self, config_file_path: str):
         with open(config_file_path) as config_file:
             self.config = json.load(config_file)
-        self.log_file = self.config['log_file']
-        self.log_level = self.config['log_level']
+        self.log_file = self.config['log']['file']
+        self.log_level = self.config['log']['level']
 
     def get(self, key):
         return self.config[key]
