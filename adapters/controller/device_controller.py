@@ -38,4 +38,3 @@ class MockDeviceController(DeviceController):
     
     def deleteById(self, id):
         return None  # Returns None to signify successful deletion
-    

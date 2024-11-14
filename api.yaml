@@ -97,7 +97,7 @@ paths:
     get:
       summary: List all metrics
       description: Retrieve a list of all metrics, each defined with a name and data type.
-      operationId: metrics.getAll
+      operationId: metric.getAll
       responses:
         '200':
           description: A list of metrics
@@ -187,7 +187,7 @@ paths:
     get:
       summary: List all messages
       description: Retrieve a list of all messages, each containing a device ID, metric ID, metric value, and timestamp.
-      operationId: messages.getAll
+      operationId: message.getAll
       responses:
         '200':
           description: A list of messages
@@ -211,7 +211,7 @@ paths:
     post:
       summary: Create a new message
       description: Record a new message with device ID, metric ID, metric value, and timestamp.
-      operationId: messages.create
+      operationId: message.create
       requestBody:
         description: Message object to be created
         required: true
