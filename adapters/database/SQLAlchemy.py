@@ -54,6 +54,9 @@ class Message(Base):
     def __repr__(self):
         return f"Message(id={self.id!r}, device_id={self.device_id!r}, metric_id={self.metric_id!r}, value={self.value!r})"
 
-def init_db(engine: Engine):
+def init_db(engine: Engine, delete_existing: bool = False):
+    if delete_existing:
+        logger.info("Deleting existing database")
+        Base.metadata.drop_all(bind=engine)
     logger.info("Initializing database")
     Base.metadata.create_all(bind=engine)
