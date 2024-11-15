@@ -1,4 +1,4 @@
-from repository.device_repository import DeviceRepository
+from domain.device.repository import DeviceRepository
 
 class DeviceService:
     def __init__(self, device_repository: DeviceRepository):
