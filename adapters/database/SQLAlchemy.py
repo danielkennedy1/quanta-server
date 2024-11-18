@@ -20,7 +20,7 @@ Base = declarative_base()
 class Device(Base):
     __tablename__ = "devices"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     description = Column(Text)
 
     messages = relationship("Message", back_populates="device")
@@ -31,7 +31,7 @@ class Device(Base):
 class Metric(Base):
     __tablename__ = "metrics"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text)
     data_type = Column(Text)
 
@@ -43,7 +43,7 @@ class Metric(Base):
 class Message(Base):
     __tablename__ = "messages"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     device_id = Column(Integer, ForeignKey("devices.id"))
     metric_id = Column(Integer, ForeignKey("metrics.id"))
     value = Column(Text)

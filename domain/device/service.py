@@ -10,8 +10,8 @@ class DeviceService:
     def get_devices(self):
         return self.device_repository.get_all()
 
-    def add_device(self, device):
-        return self.device_repository.add(device)
+    def add_device(self, description: str):
+        return self.device_repository.add(description)
 
     def delete_device(self, device_id):
         return self.device_repository.delete(device_id)

@@ -5,7 +5,8 @@
     },
     "api": {
         "spec_file": "https://raw.githubusercontent.com/danielkennedy1/quanta-api/refs/tags/v1.0.0/api.yaml",
-        "resolver": "adapters.controller.controller" 
+        "resolver": "adapters.controller.controller",
+        "port": 8080
     },
     "database": {
         "connection_string": "sqlite:///quanta.db"

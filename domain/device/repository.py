@@ -4,11 +4,11 @@ from typing import List
 
 class DeviceRepository(ABC):
     @abstractmethod
-    def add(self, device) -> Device:
+    def add(self, description) -> Device:
         pass
 
     @abstractmethod
-    def get(self, device_id) -> Device:
+    def get(self, device_id) -> Device | None:
         pass
 
     @abstractmethod

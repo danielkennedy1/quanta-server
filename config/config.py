@@ -65,5 +65,7 @@ class Config:
         def __init__(self, api_config):
             self.spec_file = api_config.get('spec_file', 'swagger.yaml')
             self.resolver = api_config.get('resolver', '')
+            self.port = api_config.get('port', 8080)
+            self.server = api_config.get('server', 'localhost')
 
 config = Config("config/config.json")

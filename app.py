@@ -7,6 +7,7 @@ from adapters.database.SQLAlchemy import engine, init_db
 
 logger = logging.getLogger(__name__)
 
+# TODO: fix the creation routes to not need id in the body
 
 config.logging.configure_logger(logging.getLogger())
 config.logging.configure_logger(logging.getLogger('uvicorn'))
@@ -19,4 +20,11 @@ app = App(__name__)
 logger.info(f"Loading API from {config.api.spec_file}")
 app.add_api(config.api.spec_file, resolver=RelativeResolver(config.api.resolver))
 
-init_db(engine)
+init_db(engine, delete_existing=True)
+
+if __name__ == "__main__":
+    app.run(port=config.api.port)
+
+@app.app.before_request
+def before_request():
+    logger.info(f"Received request: {request}")
