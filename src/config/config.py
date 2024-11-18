@@ -5,6 +5,13 @@ import coloredlogs
 
 logger = logging.getLogger(__name__)
 
+"""
+In python, user defined classes are dealt with by the interpreter as objects of type `type`.
+A "Metaclass" is the class of a class, that defines how a class behaves. (as opposed to the class of a class being `type`)
+Here, we are using a metaclass to implement the Singleton pattern by overriding the `__new__` method.
+The `__new__` method is a class method that is called to create a new instance of a class.
+What were doing here is storing the instance of the class in a class variable `_instance` and returning the instance if it exists, else creating a new instance.
+"""
 
 class Config:
     _instance = None

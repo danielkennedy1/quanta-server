@@ -1,12 +1,20 @@
-from adapters.controller.device_controller import RestDeviceController
-from adapters.controller.metrics_controller import MockMetricController
-from adapters.controller.message_controller import MockMessageController
-
 from domain.device.service import DeviceService
-from adapters.repository.SQLAlchemy import SQLAlchemyDeviceRepository
+from adapters.repository.SQLAlchemyDeviceRepository import SQLAlchemyDeviceRepository
+from adapters.controller.device_controller import RestDeviceController
 
 device_service = DeviceService(SQLAlchemyDeviceRepository())
 device = RestDeviceController(device_service)
 
-metric = MockMetricController()
+
+
+from domain.metric.service import MetricService
+from adapters.repository.SQLAlchemyMetricRepository import SQLAlchemyMetricRepository
+from adapters.controller.metric_controller import RestMetricController
+
+metric_service = MetricService(SQLAlchemyMetricRepository())
+metric = RestMetricController(metric_service)
+
+
+
+from adapters.controller.message_controller import MockMessageController
 message = MockMessageController()

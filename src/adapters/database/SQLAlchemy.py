@@ -33,7 +33,7 @@ class Metric(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text)
-    data_type = Column(Text)
+    type_name = Column(Text)
 
     messages = relationship("Message", back_populates="metric")
 

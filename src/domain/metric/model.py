@@ -4,4 +4,4 @@ from dataclasses import dataclass
 class Metric:
     id: int
     name: str
-    data_type: str
+    type_name: str

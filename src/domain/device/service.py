@@ -4,7 +4,7 @@ from domain.device.repository import DeviceRepository
 
 logger = logging.getLogger(__name__)
 
-class DeviceService:
+class DeviceService(object):
     def __init__(self, device_repository: DeviceRepository):
         logger.info("Creating DeviceService")
         self.device_repository = device_repository

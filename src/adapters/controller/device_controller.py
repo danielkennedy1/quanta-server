@@ -51,7 +51,11 @@ class RestDeviceController(DeviceController):
         self.deviceService = deviceService
 
     def getAll(self):
-        return Response(str([ApiDevice.from_dict(device.__dict__).to_json() for device in self.deviceService.get_devices()]), status=200) # type: ignore
+        # FIXME: Responses with lists arent right
+        all_devices = [ApiDevice.from_dict(device.__dict__).to_json() for device in self.deviceService.get_devices()] # type: ignore
+        if len(all_devices) > 0:
+            return Response(str(all_devices), status=200)
+        return Response("No devices found.", status=404)
     
     def create(self, body):
         device = ApiDevice.from_dict(body)

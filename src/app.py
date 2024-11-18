@@ -7,8 +7,6 @@ from adapters.database.SQLAlchemy import engine, init_db
 
 logger = logging.getLogger(__name__)
 
-# TODO: fix the creation routes to not need id in the body
-
 config.logging.configure_logger(logging.getLogger())
 config.logging.configure_logger(logging.getLogger('uvicorn'))
 config.logging.configure_logger(logging.getLogger('uvicorn.access'))
