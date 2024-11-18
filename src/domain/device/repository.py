@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from domain.device.model import Device
 from typing import List
+
+from domain.device.model import Device
 
 class DeviceRepository(ABC):
     @abstractmethod

@@ -1,4 +1,5 @@
 a2wsgi==1.10.7
+annotated-types==0.7.0
 anyio==4.6.2.post1
 asgiref==3.8.1
 attrs==24.2.0
@@ -22,12 +23,17 @@ Jinja2==3.1.4
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 MarkupSafe==3.0.2
+pydantic==2.9.2
+pydantic_core==2.23.4
 pyreadline3==3.5.4
+python-dateutil==2.9.0.post0
 python-multipart==0.0.17
 PyYAML==6.0.2
+quanta-client @ https://github.com/danielkennedy1/quanta-api/releases/download/v1.1.0/quanta-client.zip#sha256=a330a2f9135df40b811fe93ba1ddf091b61682d51ec30d45ceb3da2930090460
 referencing==0.35.1
 requests==2.32.3
 rpds-py==0.21.0
+six==1.16.0
 sniffio==1.3.1
 SQLAlchemy==2.0.36
 starlette==0.41.2
