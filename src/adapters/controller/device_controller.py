@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from flask import Response
+import json
 
 from domain.device.service import DeviceService
 from quanta_client.models.device import Device as ApiDevice
@@ -51,10 +52,9 @@ class RestDeviceController(DeviceController):
         self.deviceService = deviceService
 
     def getAll(self):
-        # FIXME: Responses with lists arent right
-        all_devices = [ApiDevice.from_dict(device.__dict__).to_json() for device in self.deviceService.get_devices()] # type: ignore
+        all_devices = [ApiDevice.from_dict(device.__dict__).to_dict() for device in self.deviceService.get_devices()] # type: ignore
         if len(all_devices) > 0:
-            return Response(str(all_devices), status=200)
+            return Response(json.dumps(all_devices), status=200)
         return Response("No devices found.", status=404)
     
     def create(self, body):

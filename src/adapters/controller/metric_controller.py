@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import logging
 from flask import Response
+import json
 
 from quanta_client.models.metric import Metric as ApiMetric
 
@@ -53,10 +54,9 @@ class RestMetricController(MetricController):
         self.metricService = metricService
 
     def getAll(self) -> Response:
-        all_metrics = [convert_to_api(metric).to_json() for metric in self.metricService.get_all()] # type: ignore
+        all_metrics = [convert_to_api(metric).to_dict() for metric in self.metricService.get_all()] # type: ignore
         if len(all_metrics) > 0:
-            # FIXME: Responses with lists arent right
-            return Response(str(all_metrics), status=200)
+            return Response(json.dumps(all_metrics), status=200)
         return Response("No metrics found", status=404) # type: ignore
     
     def create(self, body) -> Response:
