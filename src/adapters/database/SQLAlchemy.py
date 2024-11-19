@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Engine, Integer, Text, ForeignKey, create_engine
+from sqlalchemy import Column, DateTime, Engine, Integer, Text, ForeignKey, create_engine
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from config.config import config
 import logging
@@ -47,6 +47,7 @@ class Message(Base):
     device_id = Column(Integer, ForeignKey("devices.id"))
     metric_id = Column(Integer, ForeignKey("metrics.id"))
     value = Column(Text)
+    datetime = Column(DateTime)
 
     device = relationship("Device", back_populates="messages")
     metric = relationship("Metric", back_populates="messages")

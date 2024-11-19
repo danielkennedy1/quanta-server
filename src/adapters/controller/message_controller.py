@@ -1,29 +1,36 @@
 from datetime import datetime, timezone
 from abc import ABC, abstractmethod
+from flask import Response
+import json
+
+from quanta_client.models.message import Message as ApiMessage
+from adapters.controller.util import convert_message_to_api
+from domain.message.model import Message
+from domain.message.service import MessageService
 
 class MessageController(ABC):
     @abstractmethod
-    def getAll(self) -> list:
+    def getAll(self) -> Response:
         """Retrieve a list of all messages."""
         pass
     
     @abstractmethod
-    def create(self, message) -> dict:
+    def create(self, body) -> Response:
         """Record a new message."""
         pass
     
     @abstractmethod
-    def getById(self, id) -> dict | None:
+    def getById(self, id) -> Response:
         """Retrieve a specific message by ID."""
         pass
     
     @abstractmethod
-    def deleteById(self, id) -> dict:
+    def deleteById(self, id) -> Response:
         """Delete a specific message by ID."""
         pass
 
 
-class MockMessageController(MessageController):
+class MockMessageController(object):
     def getAll(self):
         return [
             {
@@ -42,13 +49,13 @@ class MockMessageController(MessageController):
             }
         ]
     
-    def create(self, message):
+    def create(self, body):
         return {
-            "id": message.get("id", 3),
-            "device_id": message.get("device_id", 3),
-            "metric_id": message.get("metric_id", 3),
-            "metric_value": message.get("metric_value", "1013.25"),
-            "timestamp": message.get("timestamp", datetime.now(timezone.utc.utc).isoformat() + "Z")
+            "id": body.get("id", 3),
+            "device_id": body.get("device_id", 3),
+            "metric_id": body.get("metric_id", 3),
+            "metric_value": body.get("metric_value", "1013.25"),
+            "timestamp": body.get("timestamp", datetime.now(timezone.utc.utc).isoformat() + "Z")
         }
     
     def getById(self, id):
@@ -64,3 +71,41 @@ class MockMessageController(MessageController):
     
     def deleteById(self, id):
         return None  # Returns None to signify successful deletion
+
+class RestMessageController(MessageController):
+    def __init__(self, message_service: MessageService):
+        self.message_service = message_service
+    
+    def getAll(self):
+        messages = self.message_service.get_all()
+
+        if len(messages) == 0:
+            return Response("No messages found", status=404)
+
+        messages = [ApiMessage.from_dict(message.__dict__).to_dict() for message in messages] # type: ignore
+
+        return Response(json.dumps(messages), status=200)
+    
+    def create(self, body) -> Response:
+        created_message = self.message_service.create(
+            body.get("device_id"),
+            body.get("metric_id"),
+            body.get("metric_value"),
+            datetime.strptime(body.get("timestamp"), "%Y-%m-%dT%H:%M:%SZ")
+        )
+
+        return Response(convert_message_to_api(created_message).to_json(), status=201) # type: ignore
+    
+    def getById(self, id) -> Response:
+        try:
+            message = self.message_service.get(id)
+            return Response(ApiMessage.from_dict(message.__dict__).to_json(), status=200) # type: ignore
+        except ValueError:
+            return Response("Message not found", status=404)
+    
+    def deleteById(self, id) -> Response:
+        try:
+            deleted_message = self.message_service.delete(id)
+            return Response(ApiMessage.from_dict(deleted_message.__dict__).to_json(), status=200) # type: ignore
+        except ValueError:
+            return Response("Message not found", status=404)

@@ -16,5 +16,9 @@ metric = RestMetricController(metric_service)
 
 
 
-from adapters.controller.message_controller import MockMessageController
-message = MockMessageController()
+from domain.message.service import MessageService
+from adapters.repository.SQLAlchemyMessageRepository import SQLAlchemyMessageRepository
+from adapters.controller.message_controller import RestMessageController
+
+message_service = MessageService(SQLAlchemyMessageRepository(), SQLAlchemyDeviceRepository(), SQLAlchemyMetricRepository())
+message = RestMessageController(message_service)

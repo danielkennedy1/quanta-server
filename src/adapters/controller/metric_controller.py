@@ -7,7 +7,7 @@ from quanta_client.models.metric import Metric as ApiMetric
 
 from domain.metric.service import MetricService
 
-from adapters.controller.util import convert_to_api
+from adapters.controller.util import convert_metric_to_api
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class RestMetricController(MetricController):
         self.metricService = metricService
 
     def getAll(self) -> Response:
-        all_metrics = [convert_to_api(metric).to_dict() for metric in self.metricService.get_all()] # type: ignore
+        all_metrics = [convert_metric_to_api(metric).to_dict() for metric in self.metricService.get_all()] # type: ignore
         if len(all_metrics) > 0:
             return Response(json.dumps(all_metrics), status=200)
         return Response("No metrics found", status=404) # type: ignore
@@ -67,17 +67,17 @@ class RestMetricController(MetricController):
         created_metric = self.metricService.add(metric.name, metric.data_type)
         if created_metric is None:
             return Response("Failed to create metric", status=500)
-        return Response(convert_to_api(created_metric).to_json(), status=201) # type: ignore
+        return Response(convert_metric_to_api(created_metric).to_json(), status=201) # type: ignore
     
     def getById(self, id) -> Response:
         metric = self.metricService.get(id)
         if metric is None:
             return Response("Metric not found", status=404)
-        return Response(convert_to_api(metric).to_json(), status=200) # type: ignore
+        return Response(convert_metric_to_api(metric).to_json(), status=200) # type: ignore
     
     def deleteById(self, id) -> Response:
         metric = self.metricService.delete(id)
         if metric is None:
             return Response("Metric not found", status=404)
-        return Response(convert_to_api(metric).to_json(), status=200) # type: ignore
+        return Response(convert_metric_to_api(metric).to_json(), status=200) # type: ignore
 

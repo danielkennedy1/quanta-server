@@ -26,3 +26,5 @@ class MetricService(object):
     def delete(self, metric_id) -> Metric:
         logger.info(f"Deleting metric with ID: {metric_id}")
         return self.metric_repository.delete(metric_id)
+
+# TODO: Conversion function, maybe factory for creating the converter
