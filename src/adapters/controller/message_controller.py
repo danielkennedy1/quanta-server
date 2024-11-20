@@ -10,7 +10,7 @@ from domain.message.service import MessageService
 
 class MessageController(ABC):
     @abstractmethod
-    def getAll(self) -> Response:
+    def getAll(self, device_id, metric_id) -> Response:
         """Retrieve a list of all messages."""
         pass
     
@@ -76,13 +76,16 @@ class RestMessageController(MessageController):
     def __init__(self, message_service: MessageService):
         self.message_service = message_service
     
-    def getAll(self):
-        messages = self.message_service.get_all()
+    def getAll(self, device_id = None, metric_id = None) -> Response:
+        try:
+            messages = self.message_service.get_all(device_id, metric_id)
+        except ValueError as e:
+            return Response(str(e), status=400)
 
         if len(messages) == 0:
             return Response("No messages found", status=404)
 
-        messages = [ApiMessage.from_dict(message.__dict__).to_dict() for message in messages] # type: ignore
+        messages = [convert_message_to_api(message).to_dict() for message in messages] # type: ignore
 
         return Response(json.dumps(messages), status=200)
     

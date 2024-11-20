@@ -18,8 +18,14 @@ class MessageService:
         self.device_repository = device_repository
         self.metric_repository = metric_repository
 
-    def get_all(self) -> List[Message]:
-        return self.message_repository.get_all()
+    def get_all(self, device_id = None, metric_id = None) -> List[Message]:
+        if device_id is None and metric_id is None:
+            return self.message_repository.get_all()
+
+        if device_id is not None and metric_id is not None:
+            return self.message_repository.get_all_by_device_and_metric(device_id, metric_id)
+
+        raise ValueError("Neither or both of device_id and metric_id must be provided")
 
     def get(self, message_id: int) -> Message:
 

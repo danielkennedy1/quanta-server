@@ -10,6 +10,10 @@ class MessageRepository(ABC):
         pass
 
     @abstractmethod
+    def get_all_by_device_and_metric(self, device_id: int, metric_id: int) -> List[Message]:
+        pass
+
+    @abstractmethod
     def get(self, message_id: int) -> Message | None:
         pass
 

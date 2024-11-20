@@ -1,5 +1,5 @@
 from sqlalchemy import Column, DateTime, Engine, Integer, Text, ForeignKey, create_engine
-from sqlalchemy.orm import relationship, declarative_base, sessionmaker
+from sqlalchemy.orm import mapped_column, relationship, declarative_base, sessionmaker
 from config.config import config
 import logging
 
@@ -44,13 +44,15 @@ class Message(Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    device_id = Column(Integer, ForeignKey("devices.id"))
-    metric_id = Column(Integer, ForeignKey("metrics.id"))
+
+    device_id = mapped_column(ForeignKey("devices.id"))
+    device = relationship("Device", lazy="joined")
+
+    metric_id = mapped_column(ForeignKey("metrics.id"))
+    metric = relationship("Metric", lazy="joined")
+
     value = Column(Text)
     datetime = Column(DateTime)
-
-    device = relationship("Device", back_populates="messages")
-    metric = relationship("Metric", back_populates="messages")
 
     def __repr__(self):
         return f"Message(id={self.id!r}, device_id={self.device_id!r}, metric_id={self.metric_id!r}, value={self.value!r})"

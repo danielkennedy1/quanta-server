@@ -29,7 +29,7 @@ pyreadline3==3.5.4
 python-dateutil==2.9.0.post0
 python-multipart==0.0.17
 PyYAML==6.0.2
-quanta-client @ https://github.com/danielkennedy1/quanta-api/releases/download/v1.1.1/quanta-client.zip#sha256=7bb555dc85b1dcb0dfc27469a85d9867eb34afa61c692dd9c2fcabc60223c3c3
+quanta-client @ https://github.com/danielkennedy1/quanta-api/releases/download/v1.2.0/quanta-client.zip#sha256=cd733c3bb38e8ef4ccd224c9ad085337c6e9b38d611cdbd9bd5abe50b498eea3
 referencing==0.35.1
 requests==2.32.3
 rpds-py==0.21.0
