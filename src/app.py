@@ -4,6 +4,7 @@ import logging
 
 from config.config import config
 from adapters.database.SQLAlchemy import engine, init_db
+from adapters.dash.dash import init_dashboard
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,10 @@ app = App(__name__)
 logger.info(f"Loading API from {config.api.spec_file}")
 app.add_api(config.api.spec_file, resolver=RelativeResolver(config.api.resolver))
 
-init_db(engine, delete_existing=True)
+init_db(engine, delete_existing=False)
+
+init_dashboard(app.app)
+
 
 if __name__ == "__main__":
     app.run(port=config.api.port)
