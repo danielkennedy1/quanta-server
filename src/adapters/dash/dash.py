@@ -65,10 +65,10 @@ def init_dashboard(app: Flask):
                             ),
                         ]
                     ),
-                    dcc.Graph(id="gauge-chart", style={"width": "50%"}),
                 ],
                 style={"display": "flex", "flex-direction": "row", "justify-content": "space-between"},
             ),
+            dcc.Graph(id="gauge-chart", style={"width": "50%"}),
             dcc.Graph(
                 id="main-graph",
             ),

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from flask import Response
 import logging
+import json
 
 from quanta_client.models.command import Command as ApiCommand
 
@@ -45,8 +46,10 @@ class RestCommandController(CommandController):
 
         if len(commands) == 0:
             logger.warning(f"No commands found for device with ID {deviceId}")
-            return Response(status=404, response="No commands found for device with ID {device_id}")
+            return Response(status=404, response=f"No commands found for device with ID {deviceId}")
 
         logger.info(f"Found {len(commands)} commands for device with ID {deviceId}")
 
-        return Response(status=200, response=[convert_command_to_api(command).to_json() for command in commands], mimetype="application/json", content_type="application/json") # type: ignore
+        all_commands = [convert_command_to_api(command).to_dict() for command in commands]
+
+        return Response(status=200, response=json.dumps(all_commands), mimetype="application/json", content_type="application/json") # type: ignore
