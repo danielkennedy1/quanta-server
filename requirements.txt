@@ -66,7 +66,7 @@ pytz==2024.2
 pywin32==308
 PyYAML==6.0.2
 pyzmq==26.2.0
-quanta-client @ https://github.com/danielkennedy1/quanta-api/releases/download/v1.2.0/quanta-client.zip#sha256=cd733c3bb38e8ef4ccd224c9ad085337c6e9b38d611cdbd9bd5abe50b498eea3
+quanta-client @ https://github.com/danielkennedy1/quanta-api/releases/download/v1.3.1/quanta-client.zip#sha256=53c3bf6298d1a4351ee00a12ff21e3248abf517460a53dc1398086363c8f67d1
 referencing==0.35.1
 requests==2.32.3
 retrying==1.3.4

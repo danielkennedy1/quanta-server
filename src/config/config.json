@@ -4,7 +4,7 @@
         "file": "app.log"
     },
     "api": {
-        "spec_file": "https://raw.githubusercontent.com/danielkennedy1/quanta-api/refs/tags/v1.2.0/api.yaml",
+        "spec_file": "https://raw.githubusercontent.com/danielkennedy1/quanta-api/refs/tags/v1.3.1/api.yaml",
         "resolver": "adapters.controller.controller",
         "port": 8080
     },

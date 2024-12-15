@@ -2,6 +2,9 @@ from datetime import datetime, timezone
 from abc import ABC, abstractmethod
 from flask import Response
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 from quanta_client.models.message import Message as ApiMessage
 from adapters.controller.util import convert_message_to_api
@@ -74,6 +77,7 @@ class MockMessageController(object):
 
 class RestMessageController(MessageController):
     def __init__(self, message_service: MessageService):
+        logger.info("Creating RestMessageController")
         self.message_service = message_service
     
     def getAll(self, device_id = None, metric_id = None) -> Response:

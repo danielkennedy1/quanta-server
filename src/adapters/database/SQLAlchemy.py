@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Engine, Integer, Text, ForeignKey, create_engine
+from sqlalchemy import Column, DateTime, Engine, Integer, Text, Boolean, ForeignKey, create_engine
 from sqlalchemy.orm import mapped_column, relationship, declarative_base, sessionmaker
 from config.config import config
 import logging
@@ -56,6 +56,19 @@ class Message(Base):
 
     def __repr__(self):
         return f"Message(id={self.id!r}, device_id={self.device_id!r}, metric_id={self.metric_id!r}, value={self.value!r})"
+
+class Command(Base):
+    __tablename__ = "commands"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    device_id = Column(Integer, ForeignKey("devices.id"))
+    command = Column(Text)
+    read = Column(Boolean, default=False)
+
+    device = relationship("Device", lazy="joined")
+
+    def __repr__(self):
+        return f"Command(id={self.id!r}, device_id={self.device_id!r}, command={self.command!r})"
 
 def init_db(engine: Engine, delete_existing: bool = False):
     logger.info("Initializing database")

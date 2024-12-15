@@ -38,7 +38,7 @@ class MockDeviceController(DeviceController):
         ]), status=200)
     
     def create(self, body):
-        return Response(str({"id": body.get("id", 3), "description": body.get("description", "Humidity Sensor in Room 103")}), status=201)
+        return Response(response=ApiDevice(id=1, description="description").to_json(), status=201, mimetype="application/json", content_type="application/json")
     
     def getById(self, id):
         return Response(str({"id": 1, "description": "Temperature Sensor in Room 101"}), status=200) if id == 1 else Response("Device not found", status=404)
@@ -53,6 +53,10 @@ class RestDeviceController(DeviceController):
 
     def getAll(self):
         all_devices = [ApiDevice.from_dict(device.__dict__).to_dict() for device in self.deviceService.get_devices()] # type: ignore
+
+        logger.info(f"Found {len(all_devices)} devices")
+        logger.debug(f"Devices: {json.dumps(all_devices)}")
+
         if len(all_devices) > 0:
             return Response(json.dumps(all_devices), status=200)
         return Response("No devices found.", status=404)
@@ -68,7 +72,7 @@ class RestDeviceController(DeviceController):
 
         assert response_device is not None
 
-        return Response(response_device.to_json(), status=201)
+        return Response(response=ApiDevice(id=response_device.id, description=response_device.description).to_json(), status=201, mimetype="application/json", content_type="application/json")
     
     def getById(self, id):
         device = self.deviceService.get_device(id)
