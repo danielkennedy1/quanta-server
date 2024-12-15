@@ -32,11 +32,6 @@ def get_type(name: str) -> Type:
 
 
 def init_dashboard(app: Flask):
-    """
-    Create a Plotly Dash dashboard within a running Flask app.
-
-    :param Flask app: Top-level Flask application.
-    """
     dash_module = dash.Dash(
         server=app,
         routes_pathname_prefix="/dashapp/",
@@ -45,45 +40,34 @@ def init_dashboard(app: Flask):
         ],
     )
 
-    # Custom HTML layout
     dash_module.index_string = html_layout
-
-    messages = message_service.get_all(device_id=1, metric_id=1)
-
-    fig = go.Figure(
-        data=[
-            go.Line(
-                x=[message.datetime for message in messages],
-                y=[get_type("float")(message.value) for message in messages],
-                name="Trace 1",
-            ),
-        ],
-    )
-
-    # Create Layout
     dash_module.layout = html.Div(
         [
             html.Div(
                 [
-                    html.Label("Select a Device:"),
-                    dcc.Dropdown(
-                        id="device-selector",
-                        options=[
-                            {"label": device.description, "value": device.id}
-                            for device in device_service.get_devices()
-                        ],
-                        style={"width": "50%"},
+                    html.Div(
+                        [
+                            html.Label("Select a Device:"),
+                            dcc.Dropdown(
+                                id="device-selector",
+                                options=[
+                                    {"label": device.description, "value": device.id}
+                                    for device in device_service.get_devices()
+                                ],
+                            ),
+                            html.Label("Select a Metric:"),
+                            dcc.Dropdown(
+                                id="metric-selector",
+                                options=[
+                                    {"label": metric.name, "value": metric.id}
+                                    for metric in metric_service.get_all()
+                                ],
+                            ),
+                        ]
                     ),
-                    html.Label("Select a Metric:"),
-                    dcc.Dropdown(
-                        id="metric-selector",
-                        options=[
-                            {"label": metric.name, "value": metric.id}
-                            for metric in metric_service.get_all()
-                        ],
-                        style={"width": "50%"},
-                    ),
-                ]
+                    dcc.Graph(id="gauge-chart", style={"width": "50%"}),
+                ],
+                style={"display": "flex", "flex-direction": "row", "justify-content": "space-between"},
             ),
             dcc.Graph(
                 id="main-graph",
@@ -92,7 +76,7 @@ def init_dashboard(app: Flask):
     )
 
     dash.callback(
-        Output("main-graph", "figure"),
+        [Output("main-graph", "figure"), Output("gauge-chart", "figure")],
         [Input("device-selector", "value"), Input("metric-selector", "value")],
     )(update_graph)
 
@@ -106,26 +90,42 @@ def update_graph(device_id, metric_id):
     device = device_service.get_device(device_id)
 
     if device is None:
-        return go.Figure()
+        return go.Figure(), go.Figure()
 
     metric = metric_service.get(metric_id)
 
     if metric is None:
-        return go.Figure()
+        return go.Figure(), go.Figure()
 
     messages = message_service.get_all(device_id, metric_id)
 
-    if len(messages) == 0:
-        return go.Figure()
+    values = [get_type(metric.type_name)(message.value) for message in messages]
 
-    fig = go.Figure(
+    if len(messages) == 0:
+        return go.Figure(), go.Figure()
+
+    line = go.Figure(
         data=[
             go.Line(
                 x=[message.datetime for message in messages],
-                y=[get_type(metric.type_name)(message.value) for message in messages],
+                y=values,
                 name=f"Metric {metric.name} for Device {device.description}",
             ),
         ],
     )
 
-    return fig
+    gauge = go.Figure(
+        data=[
+            go.Indicator(
+                mode="gauge+number",
+                value=values[-1],
+                title=f"Current {metric.name}",
+                gauge={"axis": {"range": [min(values), max(values)]}},
+            ),
+        ],
+        layout=go.Layout(
+            title=f"Device {device.description} Metric {metric.name}",
+        ),
+    )
+
+    return line, gauge

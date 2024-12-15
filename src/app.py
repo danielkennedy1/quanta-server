@@ -18,7 +18,7 @@ app = App(__name__)
 logger.info(f"Loading API from {config.api.spec_file}")
 app.add_api(config.api.spec_file, resolver=RelativeResolver(config.api.resolver))
 
-init_db(engine, delete_existing=False)
+init_db(engine, delete_existing=True)
 
 init_dashboard(app.app)
 
