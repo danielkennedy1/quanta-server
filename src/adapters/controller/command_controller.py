@@ -36,7 +36,7 @@ class RestCommandController(CommandController):
 
         logger.info(f"Command {command} sent to device with ID {device_id}")
 
-        return Response(status=201, response=convert_command_to_api(created_command).to_json()) # type: ignore
+        return Response(status=201, response=convert_command_to_api(created_command).to_json(), mimetype="application/json", content_type="application/json") # type: ignore
     
 
     def getByDeviceId(self, deviceId) -> Response:
@@ -49,4 +49,4 @@ class RestCommandController(CommandController):
 
         logger.info(f"Found {len(commands)} commands for device with ID {deviceId}")
 
-        return Response(status=200, response=[convert_command_to_api(command).to_json() for command in commands]) # type: ignore
+        return Response(status=200, response=[convert_command_to_api(command).to_json() for command in commands], mimetype="application/json", content_type="application/json") # type: ignore

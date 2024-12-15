@@ -58,7 +58,7 @@ class RestDeviceController(DeviceController):
         logger.debug(f"Devices: {json.dumps(all_devices)}")
 
         if len(all_devices) > 0:
-            return Response(json.dumps(all_devices), status=200)
+            return Response(json.dumps(all_devices), status=200, mimetype="application/json", content_type="application/json")
         return Response("No devices found.", status=404)
     
     def create(self, body):
@@ -78,7 +78,8 @@ class RestDeviceController(DeviceController):
         device = self.deviceService.get_device(id)
         if device is None:
             return Response("Device not found", status=404)
-        return Response(ApiDevice.from_dict(device.__dict__).to_json()) # type: ignore
+        return Response(response=ApiDevice(id=device.id, description=device.description).to_json(), status=200, mimetype="application/json", content_type="application/json") # type: ignore
     
     def deleteById(self, id):
-        return Response(str(self.deviceService.delete_device(id).__dict__), status=200)
+        deleted_device = self.deviceService.delete_device(id)
+        return Response(response=ApiDevice(id=deleted_device.id, description=deleted_device.description).to_json(), status=200, mimetype="application/json", content_type="application/json") if deleted_device is not None else Response("Device not found", status=404)

@@ -1,10 +1,9 @@
 from domain.device.service import DeviceService
 from adapters.repository.SQLAlchemyDeviceRepository import SQLAlchemyDeviceRepository
-from adapters.controller.device_controller import MockDeviceController, RestDeviceController
+from adapters.controller.device_controller import RestDeviceController
 
 device_service = DeviceService(SQLAlchemyDeviceRepository())
 device = RestDeviceController(device_service)
-#device = MockDeviceController()
 
 
 

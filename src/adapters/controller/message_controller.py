@@ -91,7 +91,7 @@ class RestMessageController(MessageController):
 
         messages = [convert_message_to_api(message).to_dict() for message in messages] # type: ignore
 
-        return Response(json.dumps(messages), status=200)
+        return Response(json.dumps(messages), status=200, mimetype="application/json", content_type="application/json")
     
     def create(self, body) -> Response:
         created_message = self.message_service.create(
@@ -101,18 +101,18 @@ class RestMessageController(MessageController):
             datetime.strptime(body.get("timestamp"), "%Y-%m-%dT%H:%M:%SZ")
         )
 
-        return Response(convert_message_to_api(created_message).to_json(), status=201) # type: ignore
+        return Response(convert_message_to_api(created_message).to_json(), status=201, mimetype="application/json", content_type="application/json") # type: ignore
     
     def getById(self, id) -> Response:
         try:
             message = self.message_service.get(id)
-            return Response(ApiMessage.from_dict(message.__dict__).to_json(), status=200) # type: ignore
+            return Response(ApiMessage.from_dict(message.__dict__).to_json(), status=200, mimetype="application/json", content_type="application/json") # type: ignore
         except ValueError:
             return Response("Message not found", status=404)
     
     def deleteById(self, id) -> Response:
         try:
             deleted_message = self.message_service.delete(id)
-            return Response(ApiMessage.from_dict(deleted_message.__dict__).to_json(), status=200) # type: ignore
+            return Response(ApiMessage.from_dict(deleted_message.__dict__).to_json(), status=200, mimetype="application/json", content_type="application/json") # type: ignore
         except ValueError:
             return Response("Message not found", status=404)

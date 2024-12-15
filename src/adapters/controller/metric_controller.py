@@ -56,7 +56,7 @@ class RestMetricController(MetricController):
     def getAll(self) -> Response:
         all_metrics = [convert_metric_to_api(metric).to_dict() for metric in self.metricService.get_all()] # type: ignore
         if len(all_metrics) > 0:
-            return Response(json.dumps(all_metrics), status=200)
+            return Response(json.dumps(all_metrics), status=200, mimetype="application/json", content_type="application/json")
         return Response("No metrics found", status=404) # type: ignore
     
     def create(self, body) -> Response:
@@ -67,17 +67,17 @@ class RestMetricController(MetricController):
         created_metric = self.metricService.add(metric.name, metric.data_type)
         if created_metric is None:
             return Response("Failed to create metric", status=500)
-        return Response(convert_metric_to_api(created_metric).to_json(), status=201) # type: ignore
+        return Response(convert_metric_to_api(created_metric).to_json(), status=201, mimetype="application/json", content_type="application/json") # type: ignore
     
     def getById(self, id) -> Response:
         metric = self.metricService.get(id)
         if metric is None:
             return Response("Metric not found", status=404)
-        return Response(convert_metric_to_api(metric).to_json(), status=200) # type: ignore
+        return Response(convert_metric_to_api(metric).to_json(), status=200, mimetype="application/json", content_type="application/json") # type: ignore
     
     def deleteById(self, id) -> Response:
         metric = self.metricService.delete(id)
         if metric is None:
             return Response("Metric not found", status=404)
-        return Response(convert_metric_to_api(metric).to_json(), status=200) # type: ignore
+        return Response(convert_metric_to_api(metric).to_json(), status=200, mimetype="application/json", content_type="application/json") # type: ignore
 
