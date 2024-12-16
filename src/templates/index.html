@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Form</title>
+</head>
+<body>
+    <h1>Command Form</h1>
+    <form id="commandForm">
+        <!-- Dropdown Menu -->
+        <label for="dropdown">Choose a device:</label>
+        <select id="dropdown" name="device_id">
+            {% for device in devices %}
+                <option value="{{ device.id }}">{{ device.description }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <!-- Text Box -->
+        <label for="textbox">Enter command:</label>
+        <input type="text" id="textbox" name="command" placeholder="Type command here...">
+        <br><br>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+</body>
+    <script>
+        const form = document.getElementById('commandForm');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data into an object
+            const formData = new FormData(form);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            jsonData['device_id'] = parseInt(jsonData['device_id']);
+
+            // Send data as JSON via fetch API
+            const response = await fetch("{{ url_for('/v1.adapters_controller_controller_command_send') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+            });
+
+            // Handle the server's response
+            const result = await response.json();
+            console.log(result);
+        });
+    </script>
+</html>
